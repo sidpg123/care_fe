@@ -285,7 +285,10 @@ export const PatientHome = (props: any) => {
                 </p>
               )}
               {patientData.assigned_to_object && (
-                <p className="mx-2 flex-1 rounded-lg bg-primary-200 p-3 text-center font-bold text-primary-800 shadow">
+                <p
+                  id="assigned-volunteer"
+                  className="mx-2 flex-1 rounded-lg bg-primary-200 p-3 text-center font-bold text-primary-800 shadow"
+                >
                   <span className="inline">
                     Assigned Volunteer:
                     {formatName(patientData.assigned_to_object)}
