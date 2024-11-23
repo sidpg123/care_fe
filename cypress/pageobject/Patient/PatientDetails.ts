@@ -1,12 +1,19 @@
 export class PatientDetailsPage {
-  clickAssignToAVounteer() {
-    cy.get('button:contains("Assign to a volunteer")').click({ force: true });
+  clickAssignToVolunteer() {
+    cy.contains("button", "Assign to a volunteer")
+      .scrollIntoView()
+      .should("be.visible")
+      .should("be.enabled")
+      .click();
   }
 
   selectAndAssignVolunteer(volunteerName: string) {
     cy.clickAndSelectOption("#assign_volunteer", volunteerName);
     cy.clickSubmitButton("Assign");
-    cy.wait(2000);
+    cy.get("#assigned-volunteer", { timeout: 10000 })
+      .scrollIntoView()
+      .should("be.visible")
+      .should("contain.text", volunteerName);
   }
 
   verifyVolunteerBannerIsUpdated(volunteerName: string) {
@@ -15,11 +22,9 @@ export class PatientDetailsPage {
       .should("contain.text", `Assigned Volunteer:${volunteerName}`);
   }
 
-  unassignVolunteer() {
+  unassignAndPrepareForReassignment() {
     cy.get("#clear-button").should("be.visible").find("svg").click();
-    // Close the dropdown
-    cy.get('button[id^="headlessui-combobox-button-"]').click(); // Click the dropdown close button
-
+    cy.get("#dropdown-toggle").click();
     cy.clickSubmitButton("Assign");
   }
 
