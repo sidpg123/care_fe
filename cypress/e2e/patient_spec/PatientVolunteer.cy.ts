@@ -21,30 +21,30 @@ describe("Assign a volunteer to a patient", () => {
   beforeEach(() => {
     cy.restoreLocalStorage();
     cy.clearLocalStorage(/filters--.+/);
-  });
-
-  it("assigns a volunteer to a patient and checks the banner that shows the volunteer's name", () => {
-    cy.visit("/patients");
-
+    cy.visit("/patients").then(() => {
+      cy.log("Successfully navigated to patients page");
+    });
     patientPage.visitPatient(patient);
     patientConsultationPage.clickPatientDetails();
+  });
 
-    patientDetailsPage.clickAssignToAVounteer();
+  describe("volunteer assignment workflow", () => {
+    it("should assign a new volunteer successfully", () => {
+      patientDetailsPage.clickAssignToVolunteer();
+      patientDetailsPage.selectAndAssignVolunteer(volunteerName);
+      patientDetailsPage.verifyVolunteerBannerIsUpdated(volunteerName);
+    });
 
-    patientDetailsPage.selectAndAssignVolunteer(volunteerName);
+    it("should replace existing volunteer successfully", () => {
+      patientDetailsPage.clickAssignToVolunteer();
+      patientDetailsPage.selectAndAssignVolunteer(anotherVolunteerName);
+      patientDetailsPage.verifyVolunteerBannerIsUpdated(anotherVolunteerName);
+    });
 
-    patientDetailsPage.verifyVolunteerBannerIsUpdated(volunteerName);
-
-    patientDetailsPage.clickAssignToAVounteer();
-
-    patientDetailsPage.selectAndAssignVolunteer(anotherVolunteerName);
-
-    patientDetailsPage.verifyVolunteerBannerIsUpdated(anotherVolunteerName);
-
-    patientDetailsPage.clickAssignToAVounteer();
-
-    patientDetailsPage.unassignVolunteer();
-
-    patientDetailsPage.verifyBannerIsRemovedAfterUnassign();
+    it("should unassign volunteer successfully", () => {
+      patientDetailsPage.clickAssignToVolunteer();
+      patientDetailsPage.unassignAndPrepareForReassignment();
+      patientDetailsPage.verifyBannerIsRemovedAfterUnassign();
+    });
   });
 });
