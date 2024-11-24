@@ -249,7 +249,10 @@ export const Autocomplete = <T, V>(props: AutocompleteProps<T, V>) => {
                   {`Please enter at least ${props.minQueryLength} characters to search`}
                 </div>
               ) : filteredOptions.length === 0 ? (
-                <div className="p-2 text-sm text-secondary-500">
+                <div
+                  data-testid="no-results"
+                  className="p-2 text-sm text-secondary-500"
+                >
                   No options found
                 </div>
               ) : (

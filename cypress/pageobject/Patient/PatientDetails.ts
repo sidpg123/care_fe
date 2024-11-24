@@ -17,18 +17,23 @@ export class PatientDetailsPage {
   }
 
   verifyVolunteerBannerIsUpdated(volunteerName: string) {
-    cy.get("#assigned-volunteer")
-      .scrollIntoView()
-      .should("contain.text", `Assigned Volunteer:${volunteerName}`);
+    cy.get("#assigned-volunteer").should(
+      "contain.text",
+      `Assigned Volunteer:${volunteerName}`,
+    );
   }
 
   unassignAndPrepareForReassignment() {
-    cy.get("#clear-button").should("be.visible").find("svg").click();
-    cy.get("#dropdown-toggle").click();
+    cy.get("#clear-button").should("be.visible").click();
+    cy.get("#dropdown-toggle").should("be.visible").click();
     cy.clickSubmitButton("Assign");
   }
 
   verifyBannerIsRemovedAfterUnassign() {
-    cy.get("#assigned-volunteer").should("not.exist"); // Ensure the banner does not exist
+    cy.get("#assigned-volunteer", { timeout: 10000 }).should("not.exist");
+  }
+
+  searchVolunteer(volunteerName: string) {
+    cy.get("#assign_volunteer").click().type(volunteerName);
   }
 }
