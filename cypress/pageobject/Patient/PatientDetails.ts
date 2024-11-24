@@ -34,6 +34,13 @@ export class PatientDetailsPage {
   }
 
   searchVolunteer(volunteerName: string) {
-    cy.get("#assign_volunteer").click().type(volunteerName);
+    cy.get("#assign_volunteer")
+      .should("be.visible")
+      .click()
+      .type(volunteerName);
+
+    cy.get("[data-testid='volunteer-search-results']", {
+      timeout: 10000,
+    }).should("be.visible");
   }
 }

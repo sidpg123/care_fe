@@ -240,6 +240,7 @@ export const Autocomplete = <T, V>(props: AutocompleteProps<T, V>) => {
 
           <DropdownTransition>
             <ComboboxOptions
+              data-testid="volunteer-search-results"
               modal={false}
               as="ul"
               className="cui-dropdown-base absolute z-10 mt-0.5 origin-top-right"
