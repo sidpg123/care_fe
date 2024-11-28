@@ -1,6 +1,6 @@
 export class PatientDetailsPage {
   clickAssignToVolunteer() {
-    cy.contains("button", "Assign to a volunteer")
+    cy.contains("button", "Assign to a Volunteer")
       .scrollIntoView()
       .should("be.visible")
       .should("be.enabled")
