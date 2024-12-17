@@ -43,7 +43,7 @@ describe("Assign a volunteer to a patient - Multiple Tests", () => {
 
   it("should unassign volunteer successfully", () => {
     patientDetailsPage.clickAssignOrReassignVolunteer();
-    patientDetailsPage.unassignAndPrepareForReassignment();
+    patientDetailsPage.unassignVolunteer();
     patientDetailsPage.verifyBannerIsRemovedAfterUnassign();
   });
 

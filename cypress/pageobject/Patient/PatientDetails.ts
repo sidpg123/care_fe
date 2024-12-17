@@ -9,20 +9,16 @@ export class PatientDetailsPage {
 
   clickAssignOrReassignVolunteer() {
     cy.get("#assign-volunteer")
-      .scrollIntoView()
-      .should("be.visible")
-      .should("be.enabled")
       .invoke("text")
       .then((text) => {
         if (text.includes("Assign to a Volunteer")) {
-          cy.verifyAndClickElement(
-            "#assign-volunteer",
-            "Assign to a Volunteer",
-          );
+          this.clickAssignToVolunteer();
         } else if (text.includes("Reassign Volunteer")) {
-          cy.verifyAndClickElement("#assign-volunteer", "Reassign Volunteer");
+          this.clickReassignToVolunteer();
         } else {
-          throw new Error("Expected button text not found.");
+          throw new Error(
+            `Button text must be either "Assign to a Volunteer" or "Reassign Volunteer", but found: "${text}"`,
+          );
         }
       });
   }
@@ -34,7 +30,7 @@ export class PatientDetailsPage {
     cy.verifyContentPresence("#assigned-volunteer", [volunteerName]);
   }
 
-  unassignAndPrepareForReassignment() {
+  unassignVolunteer() {
     cy.get("#clear-button").should("be.visible").click();
     cy.get("#dropdown-toggle").should("be.visible").click();
     cy.clickSubmitButton("Unassign");
