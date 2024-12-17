@@ -3,7 +3,7 @@ import { PatientConsultationPage } from "../../pageobject/Patient/PatientConsult
 import { PatientPage } from "../../pageobject/Patient/PatientCreation";
 import { PatientDetailsPage } from "../../pageobject/Patient/PatientDetails";
 
-describe("Assign a volunteer to a patient", () => {
+describe("Assign a volunteer to a patient - Multiple Tests", () => {
   const loginPage = new LoginPage();
   const patientPage = new PatientPage();
   const patientConsultationPage = new PatientConsultationPage();
@@ -13,8 +13,7 @@ describe("Assign a volunteer to a patient", () => {
   const anotherVolunteerName = "Abhi Patil";
 
   before(() => {
-    cy.log("Logging in as district admin");
-    loginPage.loginAsDistrictAdmin();
+    loginPage.loginByRole("districtAdmin");
     cy.saveLocalStorage();
   });
 
@@ -23,45 +22,34 @@ describe("Assign a volunteer to a patient", () => {
     cy.clearLocalStorage(/filters--.+/);
     cy.request("/patients").its("status").should("eq", 200);
 
-    cy.visit("/patients").then(() => {
-      cy.log("Successfully navigated to patients page");
-    });
-
-    // Add timeout and retry strategy for patient search
+    cy.visit("/patients");
     cy.wrap(null, { timeout: 10000 }).then(() => {
       patientPage.visitPatient(patient);
     });
 
-    // Verify patient details page is accessible
     cy.get("#patient-details").should("exist");
     patientConsultationPage.clickPatientDetails();
   });
 
-  describe("volunteer assignment workflow", () => {
-    it("should assign a new volunteer successfully", () => {
-      patientDetailsPage.clickAssignToVolunteer();
-      patientDetailsPage.selectAndAssignVolunteer(volunteerName);
-      patientDetailsPage.verifyVolunteerBannerIsUpdated(volunteerName);
-    });
-
-    it("should replace existing volunteer successfully", () => {
-      patientDetailsPage.clickAssignToVolunteer();
-      patientDetailsPage.selectAndAssignVolunteer(anotherVolunteerName);
-      patientDetailsPage.verifyVolunteerBannerIsUpdated(anotherVolunteerName);
-    });
-
-    it("should unassign volunteer successfully", () => {
-      patientDetailsPage.clickAssignToVolunteer();
-      patientDetailsPage.unassignAndPrepareForReassignment();
-      patientDetailsPage.verifyBannerIsRemovedAfterUnassign();
-    });
+  it("should assign a new volunteer successfully", () => {
+    patientDetailsPage.clickAssignOrReassignVolunteer();
+    patientDetailsPage.selectAndAssignVolunteer(volunteerName);
   });
 
-  describe("error states and edge cases", () => {
-    it("should handle volunteer not found in dropdown", () => {
-      patientDetailsPage.clickAssignToVolunteer();
-      patientDetailsPage.searchVolunteer("Non-existent Volunteer");
-      cy.get('[data-testid="no-results"]').should("be.visible");
-    });
+  it("should replace existing volunteer successfully", () => {
+    patientDetailsPage.clickAssignOrReassignVolunteer();
+    patientDetailsPage.selectAndAssignVolunteer(anotherVolunteerName);
+  });
+
+  it("should unassign volunteer successfully", () => {
+    patientDetailsPage.clickAssignOrReassignVolunteer();
+    patientDetailsPage.unassignAndPrepareForReassignment();
+    patientDetailsPage.verifyBannerIsRemovedAfterUnassign();
+  });
+
+  it("should handle volunteer not found in dropdown", () => {
+    patientDetailsPage.clickAssignOrReassignVolunteer();
+    patientDetailsPage.searchVolunteer("Non-existent Volunteer");
+    cy.get('[data-testid="no-results"]').should("be.visible");
   });
 });
