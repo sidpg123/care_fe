@@ -9,6 +9,8 @@ export class PatientDetailsPage {
 
   clickAssignOrReassignVolunteer() {
     cy.get("#assign-volunteer")
+      .scrollIntoView()
+      .should("be.visible")
       .invoke("text")
       .then((text) => {
         if (text.includes("Assign to a Volunteer")) {
@@ -41,13 +43,14 @@ export class PatientDetailsPage {
   }
 
   searchVolunteer(volunteerName: string) {
-    cy.get("#assign_volunteer")
-      .should("be.visible")
-      .click()
-      .type(volunteerName);
+    cy.typeAndSelectOption("#assign_volunteer", volunteerName);
+  }
 
-    cy.get("[data-testid='volunteer-search-results']", {
-      timeout: 10000,
-    }).should("be.visible");
+  searchNonExistingVolunteer(
+    volunteerName: string,
+    clearBeforeTyping: boolean = false,
+  ) {
+    cy.typeIntoField("#assign_volunteer", volunteerName, { clearBeforeTyping });
+    cy.verifyContentPresence('[data-testid="no-results"]', []);
   }
 }

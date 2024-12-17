@@ -49,7 +49,9 @@ describe("Assign a volunteer to a patient - Multiple Tests", () => {
 
   it("should handle volunteer not found in dropdown", () => {
     patientDetailsPage.clickAssignOrReassignVolunteer();
-    patientDetailsPage.searchVolunteer("Non-existent Volunteer");
-    cy.get('[data-testid="no-results"]').should("be.visible");
+    patientDetailsPage.searchNonExistingVolunteer(
+      "Non-existent Volunteer",
+      false,
+    );
   });
 });
